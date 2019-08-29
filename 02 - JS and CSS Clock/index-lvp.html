@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+  <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hour-hand"></div>
+      <div class="hand min-hand"></div>
+      <div class="hand second-hand"></div>
+      <div class="n">
+        <div class="number">12</div>
+      </div>
+      <div class="n">
+        <div class="number">1</div>
+      </div>
+      <div class="n">
+        <div class="number">2</div>
+      </div>
+      <div class="n">
+        <div class="number">3</div>
+      </div>
+      <div class="n">
+        <div class="number">4</div>
+      </div>
+      <div class="n">
+        <div class="number">5</div>
+      </div>
+      <div class="n">
+        <div class="number">6</div>
+      </div>
+      <div class="n">
+        <div class="number">7</div>
+      </div>
+      <div class="n">
+        <div class="number">8</div>
+      </div>
+      <div class="n">
+        <div class="number">9</div>
+      </div>
+      <div class="n">
+        <div class="number">10</div>
+      </div>
+      <div class="n">
+        <div class="number">11</div>
+      </div>
+    </div>
+  </div>
+
+
+  <style>
+    html {
+      background: #018DED url(http://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px);
+      /* account for the height of the clock hands */
+    }
+
+    .hour-hand {
+      width: 30%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      top: 50%;
+      left: 20%;
+      transform: rotate(90deg);
+      transform-origin: 100%;
+    }
+
+    .min-hand {
+      width: 50%;
+      height: 4px;
+      background: black;
+      position: absolute;
+      top: 50%;
+      left: 0%;
+      transform: rotate(45deg);
+      transform-origin: 100%;
+    }
+
+    .second-hand {
+      width: 50%;
+      height: 2px;
+      background: red;
+      position: absolute;
+      top: 50%;
+      transform: rotate(90deg);
+      transform-origin: 100%;
+      transition-duration: 0.3s;
+      transition-timing-function: cubic-bezier(0.08, 1.2, 0.9, 1.1)
+    }
+
+    .n {
+      font-family: 'Orbitron', sans-serif;
+      position: absolute;
+      top: 50%;
+      line-height: 5px;
+      color: rgba(255, 255, 255, 0.859);
+      text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+      display: block;
+      width: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      left: -50%;
+      width: 100%;
+      z-index: -1;
+    }
+    .number {
+      transition-duration:1s;
+      transition-timing-function: linear;
+    }
+  </style>
+
+  <script>
+    const second = document.querySelector('.second-hand')
+    const min = document.querySelector('.min-hand')
+    const hour = document.querySelector('.hour-hand')
+    var plus = 0
+    function setDate() {
+      const now = new Date()
+      var secs = now.getSeconds()
+      if( secs == 0 ) {
+        plus = 60 + plus
+      }
+      secs = secs + plus
+      const secDegrees = 90 + (secs / 60) * 360
+      const minDegrees = 90 + (now.getMinutes() / 60) * 360
+      const hourDegrees = 90 + (now.getHours() / 12) * 360
+      second.style.transform = `rotate(${secDegrees}deg)`
+      min.style.transform = `rotate(${minDegrees}deg)`
+      hour.style.transform = `rotate(${hourDegrees}deg)`
+    }
+
+
+    const n = document.querySelectorAll('.n')
+    const number = document.querySelectorAll('.number')
+    n.forEach((n, i) => {
+      const deg = 90 + 360 / 12 * i;
+      n.style.transform = `rotate(${deg}deg)`
+      number[i].style.transform = `rotate(${-deg}deg)`
+    })
+
+
+    function fun() {
+      number.forEach((n,i) => {
+        var deg = n.style.transform
+        deg = deg.split('(')[1].split('deg')[0]
+        const add = (i%2 == 0) ? -60 : 60
+        const deg2 = parseInt(deg) + add
+        number[i].style.transform = `rotate(${deg2}deg)`
+      })      
+    }
+    setInterval(setDate, 1000)
+    setInterval(fun, 1000)
+
+  </script>
+</body>
+
+</html>
