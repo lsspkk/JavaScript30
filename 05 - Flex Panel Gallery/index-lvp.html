@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Flex Panels 💪</title>
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC' rel='stylesheet' type='text/css'>
+  <script src="flower.js"></script>
+  <script src="car.js"></script>
+  <script src="bird.js"></script>
+  <script src="cat.js"></script>
+  <script src="dog.js"></script>
+  <script src="horse.js"></script>
+  <script src="architecture.js"></script>
+</head>
+
+<body>
+  <style>
+    html {
+      box-sizing: border-box;
+      background: #ffc600;
+      font-family: 'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    .panels {
+      min-height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-row {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      transition:
+        font-size 0.7s cubic-bezier(0.61, -0.19, 0.7, -0.11),
+        flex 0.7s cubic-bezier(0.61, -0.19, 0.7, -0.11),
+        background 0.2s;
+    }
+
+    .panel-column {
+      overflow: hidden;
+      display: flex;
+      flex: 1;
+    }
+
+    .panel {
+      background: #6B0F9C;
+      box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.1);
+      color: white;
+      text-align: center;
+      align-items: center;
+      /* Safari transitionend event.propertyName === flex */
+      /* Chrome + FF transitionend event.propertyName === flex-grow */
+      transition:
+        font-size 0.7s cubic-bezier(0.61, -0.19, 0.7, -0.11),
+        flex 0.7s cubic-bezier(0.61, -0.19, 0.7, -0.11),
+        background 0.2s;
+      transform: 2s linear;
+      font-size: 0px;
+      background-size: cover;
+      background-position: center;
+      flex: 1;
+      display: flex;
+    }
+
+
+    /* Flex Children */
+    .panel>* {
+      margin: 0;
+      width: 100%;
+      transition: transform 0.5s;
+      flex: 1;
+    }
+
+    .panel p {
+      text-transform: uppercase;
+      font-family: 'Amatic SC', cursive;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
+    }
+
+    .panel.open {
+      font-size: 2em;
+      flex: 5;
+      transform: rotate3d('360deg');
+    }
+
+    .panel-row.open {
+      flex: 5;
+    }
+  </style>
+
+
+  <div class="panels">
+  </div>
+
+  <script>
+    var panels = document.querySelector('.panels')
+    var counter = 0 // after three open clicks, category is changed
+    var category = 0
+    var categories = [
+      flower.photos.results,
+      car.photos.results,
+      bird.photos.results,
+      cat.photos.results,
+      dog.photos.results,
+      horse.photos.results,
+      architecture.photos.results
+    ]
+    for (var i = 1; i <= 10; i++) {
+      var row = document.createElement('div')
+      row.classList.add('panel-row')
+      for (var j = 1; j <= 10; j++) {
+        var div = document.createElement('div')
+        div.classList.add('panel', 'panel-column', `panel${j}`)
+        div.addEventListener('click', function () {
+          var changeCategory = false
+          if( !this.classList.contains('open')) {
+            counter++
+            changeCategory = counter % 3 == 0
+          }
+          this.classList.toggle('open')
+          var isOpen = false
+          this.parentElement.childNodes.forEach(e => {
+            if (e.classList.contains('open')) {
+              isOpen = true;
+            }
+          })
+          if (isOpen) {
+            this.parentElement.classList.add('open')
+          }
+          else {
+            this.parentElement.classList.remove('open')
+          }
+          if (changeCategory) {
+            setPhotos(categories[++category % categories.length])
+          }
+        })
+        row.appendChild(div)
+      }
+      panels.appendChild(row)
+    }
+    function setPhotos(photos) {
+      var index = 0
+      for (var row of panels.children) {
+        for (var div of row.children) {
+          div.innerHTML = `<p>${photos[index].alt_description}</p>`
+          div.style.backgroundImage = `url( ${photos[index].urls.small})`
+          index++
+        }
+      }
+    }
+
+    setPhotos(categories[0])
+  </script>
+
+
+
+</body>
+
+</html>
